@@ -1,0 +1,26 @@
+<div id="avgPrice">Loading average price...</div>
+
+<script src="/socket.io/socket.io.js"></script>
+<script>
+    const socket = io.connect("http://localhost:3000");
+
+    socket.on("connect", () => {
+        console.log("Socket connected successfully.");
+    });
+
+    socket.on("avgPrice", (data) => {
+        console.log("Received avgPrice data:", data); // Check if data is received
+
+        const avgPriceDiv = document.getElementById("avgPrice");
+
+        if (data.avgPrice === "Error calculating average price" || data.avgPrice === "No products available") {
+            avgPriceDiv.innerHTML = `Error: ${data.avgPrice}`;
+        } else {
+            avgPriceDiv.innerHTML = `Average Price: $${data.avgPrice.toFixed(2)}`;
+        }
+    });
+
+    socket.on("connect_error", (err) => {
+        console.error("Socket connection error:", err.message);
+    });
+</script>
